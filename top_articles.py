@@ -22,13 +22,17 @@ class BBC_class:
         if get_article.status_code != 200:
             return None
         else:
-            article = bs(get_article.content, 'html.parser')
-            body = article.find(property="articleBody")
             article_text = ""
-
-            for p in body.find_all("p"):
-                article_text += p.text
-        
+            article = bs(get_article.content, 'html.parser')
+            if (article.find(property="articleBody")):
+                body = article.find(property="articleBody")
+                for p in body.find_all("p"):
+                    article_text += p.text
+            else:
+                body = article.find("article")
+                for div in body.find_all("div", {"data-component": "text-block"}):
+                    article_text += div.find("div").text   
+                    
         return article_text
 
 
@@ -38,4 +42,7 @@ class BBC_class:
             return None
         else:
             article = bs(get_article.content, 'html.parser')
-            return article.find(class_="story-body__h1").text
+            if article.findAll(class_="story-body__h1"):
+                return article.find(class_="story-body__h1").text
+            else:
+                return article.find(id="main-heading").text
