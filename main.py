@@ -71,4 +71,5 @@ with Pool(processes=3) as pool:
 
 
 while mixer.music.get_busy():
+    time.sleep(1)
     continue
